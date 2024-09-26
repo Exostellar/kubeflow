@@ -5,8 +5,8 @@
       <mat-label i18n>Number of GPUs</mat-label>
       <mat-select matNativeControl formControlName="num">
         <mat-option value="none" i18n="option None">None</mat-option>
-        <mat-option *ngFor="let v of gpusCount" [value]="v">
-          {{ v }}
+        <mat-option *ngFor="let v of gpusCount" [value]="v.value">
+          {{ v.display }}
         </mat-option>
       </mat-select>
     </mat-form-field>

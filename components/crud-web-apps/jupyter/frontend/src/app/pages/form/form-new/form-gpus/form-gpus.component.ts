@@ -9,6 +9,7 @@ import { JWABackendService } from 'src/app/services/backend.service';
   templateUrl: './form-gpus.component.html',
   styleUrls: ['./form-gpus.component.scss'],
 })
+
 export class FormGpusComponent implements OnInit {
   @Input() parentForm: FormGroup;
   @Input() vendors: GPUVendor[] = [];
@@ -18,14 +19,22 @@ export class FormGpusComponent implements OnInit {
 
   subscriptions = new Subscription();
   maxGPUs = 16;
-  gpusCount = ['1', '2', '4', '8'];
+
+  // Define the display values and their corresponding internal values
+  gpusCount = [
+    { display: '0.25', value: '1' },
+    { display: '0.5', value: '2' },
+    { display: '1', value: '4' },
+    { display: '2', value: '8' },
+    { display: '4', value: '16' },
+    { display: '8', value: '32' }
+  ];
 
   constructor(public backend: JWABackendService) {}
 
   ngOnInit() {
     this.gpuCtrl = this.parentForm.get('gpus') as FormGroup;
 
-    // Vendor should not be empty if the user selects GPUs num
     this.parentForm
       .get('gpus')
       .get('vendor')
@@ -63,8 +72,6 @@ export class FormGpusComponent implements OnInit {
   }
 
   private vendorWithNum(): ValidatorFn {
-    // Make sure that if the user has specified a number of GPUs
-    // that they also specify the GPU vendor
     return (control: AbstractControl): { [key: string]: any } => {
       const num = this.parentForm.get('gpus').get('num').value;
       const vendor = this.parentForm.get('gpus').get('vendor').value;

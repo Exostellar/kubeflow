@@ -1,0 +1,4 @@
+#!/bin/bash
+
+kubectl get deployment jupyter-web-app-deployment -n kubeflow -o yaml > jupyter-web-app-deployment-latest.yaml
+kubectl apply -f jupyter-web-app-deployment-latest.yaml

@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    meta.helm.sh/release-name: jupyter-web-app
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2024-08-19T22:20:23Z"
+  generation: 1
+  labels:
+    app: jupyter-web-app
+    app.kubernetes.io/managed-by: Helm
+    kustomize.component: jupyter-web-app
+  name: jupyter-web-app-deployment
+  namespace: kubeflow
+  resourceVersion: "25805"
+  uid: 661d7f92-6b28-4cdd-95c9-eace444725ef
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: jupyter-web-app
+      kustomize.component: jupyter-web-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: jupyter-web-app
+        kustomize.component: jupyter-web-app
+    spec:
+      containers:
+      - env:
+        - name: APP_PREFIX
+          value: /jupyter
+        - name: UI
+          value: default
+        - name: USERID_HEADER
+          value: kubeflow-userid
+        - name: USERID_PREFIX
+        - name: APP_SECURE_COOKIES
+          value: "true"
+        image: 374070299695.dkr.ecr.us-east-2.amazonaws.com/jupyter-web-app:latest
+        imagePullPolicy: IfNotPresent
+        name: jupyter-web-app
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/config
+          name: config-volume
+        - mountPath: /src/apps/default/static/assets/logos
+          name: logos-volume
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: jupyter-web-app-service-account
+      serviceAccountName: jupyter-web-app-service-account
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: jupyter-web-app-config-mgf762gt24
+        name: config-volume
+      - configMap:
+          defaultMode: 420
+          name: jupyter-web-app-logos
+        name: logos-volume
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2024-08-19T22:20:30Z"
+    lastUpdateTime: "2024-08-19T22:20:30Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2024-08-19T22:20:23Z"
+    lastUpdateTime: "2024-08-19T22:20:30Z"
+    message: ReplicaSet "jupyter-web-app-deployment-f5f566478" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
