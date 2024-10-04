@@ -7,7 +7,9 @@ export interface PropertyConfig {
   popoverField?: string;
   truncate?: boolean /* if set to true, user needs to define max-width */;
   style?: { [prop: string]: string };
+  transform?: (value: any) => any;
 }
+
 
 export class PropertyValue {
   field: string;
@@ -16,6 +18,7 @@ export class PropertyValue {
   popoverField: string;
   truncate: boolean;
   style: { [prop: string]: string };
+  transform?: (value: any) => any;
 
   private defaultValues: PropertyConfig = {
     field: '',
@@ -23,10 +26,11 @@ export class PropertyValue {
     popoverField: '',
     truncate: false,
     style: {},
+    transform: value => value,
   };
 
   constructor(config: PropertyConfig) {
-    const { field, valueFn, tooltipField, popoverField, truncate, style } = {
+    const { field, valueFn, tooltipField, popoverField, truncate, style, transform } = {
       ...this.defaultValues,
       ...config,
     };
@@ -36,6 +40,7 @@ export class PropertyValue {
     this.popoverField = popoverField;
     this.truncate = truncate;
     this.style = style;
+    this.transform = transform
   }
 
   getClasses() {
@@ -65,9 +70,13 @@ export class PropertyValue {
     return getAttributeValue(row, this.popoverField);
   }
 
-  getValue(row: any) {
+  getValue(row: any) { 
     if (this.valueFn) {
       return this.valueFn(row);
+    }
+
+    if (this.transform) {
+      return this.transform(getAttributeValue(row, this.field));
     }
 
     return getAttributeValue(row, this.field);

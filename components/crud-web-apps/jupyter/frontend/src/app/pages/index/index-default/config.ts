@@ -14,6 +14,7 @@ import {
 } from 'kubeflow';
 import { ServerTypeComponent } from './server-type/server-type.component';
 
+
 // --- Config for the Resource Table ---
 export const defaultConfig: TableConfig = {
   dynamicNamespaceColumn: true,
@@ -81,6 +82,7 @@ export const defaultConfig: TableConfig = {
       }),
       sort: true,
     },
+    
     {
       matHeaderCellDef: $localize`GPUs`,
       matColumnDef: 'gpus',
@@ -89,9 +91,11 @@ export const defaultConfig: TableConfig = {
       value: new PropertyValue({
         field: 'gpus.count',
         tooltipField: 'gpus.message',
+        transform: (value: number) => value / 8,
       }),
       sort: true,
     },
+    
     {
       matHeaderCellDef: $localize`CPUs`,
       matColumnDef: 'cpu',

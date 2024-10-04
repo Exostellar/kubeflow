@@ -1,5 +1,6 @@
 IMG ?= jupyter-web-app
-TAG ?= $(shell git describe --tags --always --dirty)
+#TAG ?= $(shell git describe --tags --always --dirty)
+TAG ?= latest
 DOCKERFILE ?= jupyter/Dockerfile
 ARCH ?= linux/amd64
 
@@ -7,10 +8,8 @@ docker-build:
 	cd ../ && docker build -t ${IMG}:${TAG} -f ${DOCKERFILE} .
 
 docker-push:
-	docker tag ${IMG}:${TAG} 374070299695.dkr.ecr.us-east-2.amazonaws.com/${IMG}:${TAG}
-#docker tag ${IMG}:${TAG} 374070299695.dkr.ecr.us-east-2.amazonaws.com/${IMG}:latest
-	docker push 374070299695.dkr.ecr.us-east-2.amazonaws.com/${IMG}:${TAG}
-#docker push 374070299695.dkr.ecr.us-east-2.amazonaws.com/${IMG}:latest
+	docker tag ${IMG}:${TAG} 374070299695.dkr.ecr.us-east-2.amazonaws.com/kubeflow/${IMG}:${TAG}
+	docker push 374070299695.dkr.ecr.us-east-2.amazonaws.com/kubeflow/${IMG}:${TAG}
 
 .PHONY: docker-build-multi-arch
 docker-build-multi-arch: ##  Build multi-arch docker images with docker buildx
